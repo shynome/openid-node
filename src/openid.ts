@@ -1,10 +1,19 @@
 import { httpGetter } from './getter'
 import { DiscoveryCache, DiscoveredInfo } from './discovery_cache'
-import { NonceFields, SignedFields } from './verify'
+import {
+  NonceFields,
+  SignedFields,
+  verifySignedFields,
+  verifySignature,
+  verifyReturnTo,
+  verifyNonce,
+} from './verify'
 import { Normalize } from './normalizer'
 import { isEmptyString } from './utils'
 import { yadisDiscovery } from './yadis_discovery'
 import { htmlDiscovery } from './html_discovery'
+import { NonceStore } from './nonce_store'
+import url from 'url'
 
 interface VerifyDiscoveredFields extends NonceFields, SignedFields {
   [k: string]: any
@@ -13,8 +22,8 @@ interface VerifyDiscoveredFields extends NonceFields, SignedFields {
 
 export class OpenID {
   constructor(private urlGetter: httpGetter) {}
-  async verifyDiscovered(
-    uri: string,
+  protected async verifyDiscovered(
+    uri: url.UrlWithParsedQuery,
     vals: VerifyDiscoveredFields,
     cache: DiscoveryCache,
   ) {
@@ -126,5 +135,29 @@ export class OpenID {
           return htmlDiscovery(id, this.urlGetter)
         })
     )
+  }
+  async Verify(uri: string, cache: DiscoveryCache, nonceStore: NonceStore) {
+    const parsedURL = url.parse(uri, true)
+    const values = parsedURL.query as { [k: string]: string }
+
+    // 11.  Verifying Assertions
+    // When the Relying Party receives a positive assertion, it MUST
+    // verify the following before accepting the assertion:
+
+    // - The value of "openid.signed" contains all the required fields.
+    //   (Section 10.1)
+    verifySignedFields(values as any)
+
+    // - The signature on the assertion is valid (Section 11.4)
+    await verifySignature(uri, values, this.urlGetter)
+
+    // - The value of "openid.return_to" matches the URL of the current
+    //   request (Section 11.1)
+    verifyReturnTo(parsedURL, values as any)
+
+    await this.verifyDiscovered(parsedURL, values as any, cache)
+
+    await verifyNonce(values as any, nonceStore)
+    return values['openid.claimed_id']
   }
 }
