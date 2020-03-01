@@ -11,7 +11,7 @@ export async function htmlDiscovery(
   const d = findProviderFromHeadLink(resp.data)
   return {
     ...d,
-    ClaimedID: resp.config.url as string,
+    ClaimedID: resp.request.url as string,
   }
 }
 
@@ -20,12 +20,12 @@ export function findProviderFromHeadLink(
 ): Pick<DiscoveredInfo, 'OpEndpoint' | 'OpLocalID'> {
   const $ = cheerio.load(input)
 
-  const opEndpoint = $(`head>link[rel='openid2.provider']`).attr('href') || ''
+  const opEndpoint = $(`head>link[rel~='openid2.provider']`).attr('href') || ''
   if (isEmptyString(opEndpoint)) {
     throw new Error('LINK with rel=openid2.provider not found')
   }
 
-  const opLocalID = $(`head>link[rel='openid2.local_id']`).attr('href') || ''
+  const opLocalID = $(`head>link[rel~='openid2.local_id']`).attr('href') || ''
 
   return {
     OpEndpoint: opEndpoint,

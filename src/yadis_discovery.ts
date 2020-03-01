@@ -25,8 +25,8 @@ export async function yadisDiscovery(id: string, getter: httpGetter) {
 
   // The response MUST be one of:
   // (see 6.2.6 for precedence)
-  let l = resp.headers['X-XRDS-Location']
-  if (l != '') {
+  let l = resp.headers['X-XRDS-Location'] || ''
+  if (l !== '') {
     // 2. HTTP response-headers that include an X-XRDS-Location
     // response-header, together with a document
     return getYadisResourceDescriptor(l, getter)
@@ -62,7 +62,7 @@ export async function getYadisResourceDescriptor(
 //    <meta http-equiv="X-XRDS-Location" content="....">
 export function findMetaXrdsLocation(input: string) {
   const $ = cheerio.load(input)
-  const location = $('head>meta[http-equiv=X-XRDS-Location]').attr('content')
+  const location = $(`head>meta[http-equiv~='X-XRDS-Location']`).attr('content')
   if (typeof location === 'undefined' || isEmptyString(location)) {
     throw new Error('Meta X-XRDS-Location not found')
   }
