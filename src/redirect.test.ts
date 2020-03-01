@@ -133,7 +133,7 @@ function compareUrls(url1: string, expected: string) {
   if (
     p1.protocol != p2.protocol ||
     p1.host != p2.host ||
-    (p1.path != null && decodeURIComponent(p1.path) != p2.path)
+    p1.pathname != p2.pathname
   ) {
     throw new Error(`URLs don't match: ${url1} vs ${expected}`)
   }

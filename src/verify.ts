@@ -108,7 +108,7 @@ export function verifyReturnTo(
   if (
     uri.protocol != rp.protocol ||
     uri.host != rp.host ||
-    uri.path != rp.path
+    uri.pathname != rp.pathname
   ) {
     throw new Error("Scheme, host or path don't match in return_to URL")
   }
