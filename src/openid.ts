@@ -1,4 +1,4 @@
-import { httpGetter } from './getter'
+import { httpGetter, AxiosHttpGetter } from './getter'
 import { DiscoveryCache, DiscoveredInfo } from './discovery_cache'
 import {
   NonceFields,
@@ -22,7 +22,7 @@ interface VerifyDiscoveredFields extends NonceFields, SignedFields {
 }
 
 export class OpenID {
-  constructor(private urlGetter: httpGetter) {}
+  constructor(private urlGetter: httpGetter = new AxiosHttpGetter()) {}
   protected async verifyDiscovered(
     uri: url.UrlWithParsedQuery,
     vals: VerifyDiscoveredFields,
@@ -100,7 +100,7 @@ export class OpenID {
 
     throw new Error('Could not verify the claimed ID')
   }
-  async Discover(id: string) {
+  Discover = async (id: string) => {
     // From OpenID specs, 7.2: Normalization
     id = Normalize(id)
 
@@ -132,12 +132,17 @@ export class OpenID {
         // retrieved, or no Service Elements are found in the XRDS
         // document, the URL is retrieved and HTML-Based discovery SHALL be
         // attempted.
-        .catch(() => {
+        .catch(err => {
+          console.error(err)
           return htmlDiscovery(id, this.urlGetter)
         })
     )
   }
-  async Verify(uri: string, cache: DiscoveryCache, nonceStore: NonceStore) {
+  Verify = async (
+    uri: string,
+    cache: DiscoveryCache,
+    nonceStore: NonceStore,
+  ) => {
     const parsedURL = url.parse(uri, true)
     const values = parsedURL.query as { [k: string]: string }
 
@@ -161,7 +166,7 @@ export class OpenID {
     await verifyNonce(values as any, nonceStore)
     return values['openid.claimed_id']
   }
-  async RedirectURL(id: string, callbackURL: string, realm: string) {
+  RedirectURL = async (id: string, callbackURL: string, realm: string) => {
     const d = await this.Discover(id)
     return BuildRedirectURL(
       d.OpEndpoint,

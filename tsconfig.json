@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2017",
     "outDir": "lib",
     "module": "commonjs",
     "moduleResolution": "Node",
@@ -9,6 +9,5 @@
     "strict": true,
     "declaration": true
   },
-  "exclude": ["src/__tests__", "src/*.test.ts"],
   "include": ["src"]
 }

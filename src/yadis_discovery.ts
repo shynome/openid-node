@@ -21,11 +21,11 @@ export async function yadisDiscovery(id: string, getter: httpGetter) {
 
   // Section 6.2.5 from Yadis 1.0 spec: Response
 
-  const contentType: string = resp.headers['Content-Type']
+  const contentType: string = resp.headers['content-type']
 
   // The response MUST be one of:
   // (see 6.2.6 for precedence)
-  let l = resp.headers['X-XRDS-Location'] || ''
+  let l = resp.headers['x-xrds-location'] || ''
   if (l !== '') {
     // 2. HTTP response-headers that include an X-XRDS-Location
     // response-header, together with a document
