@@ -22,10 +22,10 @@ server.route({
     return `
     <html>
       <head>
-        <title>go OpenID sample app</title>
+        <title>node OpenID sample app</title>
       </head>
       <body>
-        <h1>go OpenID sample app</h1>
+        <h1>node OpenID sample app</h1>
         <a href="/login">Login</a>
       </body>
     </html>
@@ -40,7 +40,7 @@ server.route({
     return `
     <html>
     <head>
-      <title>go OpenID sample app</title>
+      <title>node OpenID sample app</title>
       <script>
       function setId(id) {
         document.forms[0].id.value = id;
@@ -112,10 +112,10 @@ server.route({
     return `
     <html>
       <head>
-        <title>go OpenID sample app</title>
+        <title>node OpenID sample app</title>
       </head>
       <body>
-        <h1>go OpenID sample app</h1>
+        <h1>node OpenID sample app</h1>
         <p>Welcome ${id}.</p>
         <p>Devs: set a cookie, or this kind of things to
           identify the user across different pages.</p>
