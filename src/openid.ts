@@ -132,8 +132,7 @@ export class OpenID {
         // retrieved, or no Service Elements are found in the XRDS
         // document, the URL is retrieved and HTML-Based discovery SHALL be
         // attempted.
-        .catch(err => {
-          console.error(err)
+        .catch(() => {
           return htmlDiscovery(id, this.urlGetter)
         })
     )
