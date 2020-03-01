@@ -14,6 +14,7 @@ import { yadisDiscovery } from './yadis_discovery'
 import { htmlDiscovery } from './html_discovery'
 import { NonceStore } from './nonce_store'
 import url from 'url'
+import { BuildRedirectURL } from './redirect'
 
 interface VerifyDiscoveredFields extends NonceFields, SignedFields {
   [k: string]: any
@@ -159,5 +160,15 @@ export class OpenID {
 
     await verifyNonce(values as any, nonceStore)
     return values['openid.claimed_id']
+  }
+  async RedirectURL(id: string, callbackURL: string, realm: string) {
+    const d = await this.Discover(id)
+    return BuildRedirectURL(
+      d.OpEndpoint,
+      d.OpLocalID,
+      d.ClaimedID,
+      callbackURL,
+      realm,
+    )
   }
 }

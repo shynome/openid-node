@@ -116,7 +116,7 @@ export function verifyReturnTo(
   return compareQueryParams(qp, vals)
 }
 
-function compareQueryParams<Q = { [k: string]: string }>(q1: Q, q2: Q) {
+export function compareQueryParams<Q = { [k: string]: string }>(q1: Q, q2: Q) {
   for (let k in q1) {
     let v1 = q1[k]
     let v2 = q2[k]
