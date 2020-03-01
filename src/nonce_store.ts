@@ -1,5 +1,5 @@
-export abstract class NonceStore {
-  abstract Accept(endpoint: string, nonce: string): Promise<void>
+export interface NonceStore {
+  Accept(endpoint: string, nonce: string): Promise<void>
 }
 
 export interface Nonce {

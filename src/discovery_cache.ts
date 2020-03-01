@@ -5,10 +5,10 @@ export interface DiscoveredInfo {
   // ProtocolVersion: it's always openId 2.
 }
 
-export abstract class DiscoveryCache {
-  abstract put(id: string, info: DiscoveredInfo): Promise<void>
+export interface DiscoveryCache {
+  put(id: string, info: DiscoveredInfo): Promise<void>
   /**Return a discovered info, or nil. */
-  abstract get(id: string): Promise<DiscoveredInfo | undefined>
+  get(id: string): Promise<DiscoveredInfo | undefined>
 }
 
 export class SimpleDiscoveryCache implements DiscoveryCache {
