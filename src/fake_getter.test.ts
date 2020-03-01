@@ -2,8 +2,6 @@ import { httpGetter, Response } from './getter'
 import { parseResponse } from 'http-string-parser'
 import { OpenID } from './openid'
 
-describe('fake_getter', () => {})
-
 class TestGetter implements httpGetter {
   constructor(
     public urls: { [k: string]: string } = {},
@@ -17,9 +15,13 @@ class TestGetter implements httpGetter {
     let doc = this.urls[key]
     if (typeof doc === 'string') {
       const resp = parseResponse(doc)
+      let headers: { [k: string]: string } = {}
+      for (let k in resp.headers) {
+        headers[k.toLowerCase()] = resp.headers[k]
+      }
       return {
         data: resp.body,
-        headers: resp.headers,
+        headers: headers,
         request: { url: uri },
       }
     }
@@ -95,3 +97,9 @@ Content-Type: text/html
 	  href="http://www.livejournal.com/openid/server.bml">
 <link rel="openid2.local_id openid.delegate"
       href="http://exampleuser.livejournal.com/">`
+
+describe('fake_getter', () => {
+  it('testInstance', () => {
+    expect(testInstance).toBeDefined()
+  })
+})
